@@ -7,11 +7,11 @@ import constants
 def generate_nasdaq_url():
     """
     Generates a url pointing to the yahoo finance page summarizing daily
-    data for the nasdaq composite for the previous 60-day period
+    data for the nasdaq composite for the previous 90-day period
     :return: <str> generated url
     """
     time2 = int(time.time())
-    time1 = time2 - constants.SECONDS_IN_60_DAYS
+    time1 = time2 - constants.SECONDS_IN_90_DAYS
     url = f'https://finance.yahoo.com/quote/%5EIXIC/history?period1={time1}&' \
           f'period2={time2}&' \
           'interval=1d&' \
