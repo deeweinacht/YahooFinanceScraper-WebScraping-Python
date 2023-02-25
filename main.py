@@ -1,23 +1,15 @@
 """
-
+This script scrapes data from yahoo finance and saves it to an SQLite database
 """
+import sqlite3
 
-from datetime import datetime
 import web_scraping
-import database_access
+import database_functions as db_func
 import constants
 
 
-# TODO: format date string so DB recognizes as date
-# TODO: include logic to prevent duplicate entries attempted
 # TODO: finish documentation
 # TODO: check scheduler host and setup
-
-
-def format_date(date_orig: str):
-    date_formatted = datetime.strptime(date_orig, '%b %d, %Y')
-    return date_formatted.strftime('%Y-%m-%d')
-
 
 if __name__ == '__main__':
 
@@ -25,14 +17,21 @@ if __name__ == '__main__':
     source_code = web_scraping.scrape(url)
     table = web_scraping.extract_table_data(source_code)
 
-    connection = database_access.database_connect(constants.DATABASE_NAME)
-    for row in table[1:-1]:
-        row[0] = format_date(row[0])
-        existing_row = database_access.database_load_row(connection,
-                                                         constants.TABLE_NAME,
-                                                         row[0])
-        if not existing_row:
-            database_access.database_insert_row(connection,
-                                                constants.TABLE_NAME,
-                                                row)
+    try:
+        connection = db_func.database_connect(constants.DATABASE_NAME)
+        for row in table[1:-1]:
+            row[0] = db_func.format_date_sqlite(row[0])
+            existing_row = db_func.database_load_row(connection,
+                                                     constants.TABLE_NAME,
+                                                     row[0])
+            if not existing_row:
+                db_func.database_insert_row(connection,
+                                            constants.TABLE_NAME,
+                                            row)
+        connection.close()
+    except sqlite3.OperationalError:
+        print ('Error communicating with database')
+
+
+
 
