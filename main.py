@@ -8,9 +8,6 @@ import database_functions as db_func
 import constants
 
 
-# TODO: finish documentation
-# TODO: check scheduler host and setup
-
 if __name__ == '__main__':
 
     url = web_scraping.generate_nasdaq_url()
@@ -19,7 +16,7 @@ if __name__ == '__main__':
 
     try:
         connection = db_func.database_connect(constants.DATABASE_NAME)
-        for row in table[1:-1]:
+        for row in table:
             row[0] = db_func.format_date_sqlite(row[0])
             existing_row = db_func.database_load_row(connection,
                                                      constants.TABLE_NAME,
@@ -30,8 +27,4 @@ if __name__ == '__main__':
                                             row)
         connection.close()
     except sqlite3.OperationalError:
-        print ('Error communicating with database')
-
-
-
-
+        print('Error communicating with database')

@@ -34,10 +34,10 @@ def scrape(url: str):
 
 def extract_table_data(source: str):
     """
-    Extracts tables from html source code.
+    Extracts tables from html source code and returns the first table.
     :param source: source file of the webpage
-    :return: <list> first table from the webpage
+    :return: <list> rows of data from the table
     """
     parser = html_table_parser.HTMLTableParser()
     parser.feed(source)
-    return parser.tables[0]
+    return parser.tables[0][1:-1]
